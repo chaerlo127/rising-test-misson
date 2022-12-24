@@ -1,9 +1,7 @@
 package com.example.demo.src.user;
 
 
-import com.example.demo.src.user.model.GetUserRes;
-import com.example.demo.src.user.model.PatchUserReq;
-import com.example.demo.src.user.model.PostUserReq;
+import com.example.demo.src.user.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -44,6 +42,16 @@ public class UserDao {
                 getUsersByEmailParams);
     }
 
+    public PostLoginReq getUsersByEmailwithPwd(String email){
+        String getUsersByEmailQuery = "select userIdx, email, pwd from User where email=?";
+        String getUsersByEmailParams = email;
+        return this.jdbcTemplate.queryForObject(getUsersByEmailQuery,
+                (rs, rowNum) -> new PostLoginReq(
+                        rs.getInt("userIdx"),
+                        rs.getString("email"),
+                        rs.getString("pwd")),
+                getUsersByEmailParams);
+    }
 
     public GetUserRes getUsersByIdx(int userIdx){
         String getUsersByIdxQuery = "select userIdx,name,nickName,email from User where userIdx=?";

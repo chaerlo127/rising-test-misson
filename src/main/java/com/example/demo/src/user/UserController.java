@@ -127,4 +127,28 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /**
+     * 로그인 API
+     * [POST] /users/login
+     * @return BaseResponse<PostLoginRes>
+     */
+    @ResponseBody
+    @PostMapping("/{userIdx}")  // (POST) 127.0.0.1:9000/users/login
+    public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq){
+        if(postLoginReq.getEmail() == null){
+            return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+        }
+        // 이메일 정규표현
+        if(!isRegexEmail(postLoginReq.getEmail())){
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
+        try{
+            PostLoginRes postLoginRes = userService.loginUser(postLoginReq);
+            return new BaseResponse<>(postLoginRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 }

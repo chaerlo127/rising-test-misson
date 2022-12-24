@@ -3,9 +3,7 @@ package com.example.demo.src.user;
 
 import com.example.demo.config.BaseException;
 
-import com.example.demo.src.user.model.PatchUserReq;
-import com.example.demo.src.user.model.PostUserReq;
-import com.example.demo.src.user.model.PostUserRes;
+import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
 import com.example.demo.utils.SHA256;
 import org.slf4j.Logger;
@@ -50,7 +48,6 @@ public class UserService {
         try{
             int userIdx = userDao.createUser(postUserReq);
             //jwt 발급.
-            // TODO: jwt는 다음주차에서 배울 내용입니다!
             String jwt = jwtService.createJwt(userIdx);
             return new PostUserRes(jwt,userIdx);
         } catch (Exception exception) {
@@ -69,4 +66,26 @@ public class UserService {
         }
     }
 
+    public PostLoginRes loginUser(PostLoginReq postLoginReq) throws BaseException{
+        PostLoginReq user = userDao.getUsersByEmailwithPwd(postLoginReq.getEmail());
+        String pwd;
+        try{
+            //암호화
+            pwd = new SHA256().encrypt(postLoginReq.getPwd());
+        } catch (Exception ignored) {
+            throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
+        }
+
+        if(user == null){
+            throw new BaseException(FAILED_TO_LOGIN);
+        }
+        // 비밀 번호 일치 확인
+        if(user.getPwd().equals(pwd)){
+            //jwt 발급.
+            String jwt = jwtService.createJwt(user.getUserIdx());
+            return new PostLoginRes(user.getUserIdx(),jwt);
+        }else{
+            throw new BaseException(FAILED_TO_LOGIN);
+        }
+    }
 }
