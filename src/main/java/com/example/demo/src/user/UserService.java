@@ -54,7 +54,6 @@ public class UserService {
             String jwt = jwtService.createJwt(userIdx);
             return new PostUserRes(jwt,userIdx);
         } catch (Exception exception) {
-            exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
         }
     }
