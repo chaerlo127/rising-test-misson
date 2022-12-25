@@ -26,6 +26,11 @@ public class LocationController {
     }
     // location 구하는 것
 
+    /**
+     * location list 불러오는 API
+     * (GET) 127.0.0.1:9000/locations
+     * @return BaseResponse<List<GetLocationListRes>>
+     */
     @ResponseBody
     @GetMapping("") // (GET) 127.0.0.1:9000/locations
     public BaseResponse<List<GetLocationListRes>> getLocationList(){
