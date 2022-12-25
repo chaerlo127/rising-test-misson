@@ -4,6 +4,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.config.BaseResponseStatus;
 import com.example.demo.src.Post.model.GetPostRes;
+import com.example.demo.src.Post.model.GetPostidxRes;
 import com.example.demo.src.Post.model.PostPostReq;
 import com.example.demo.utils.JwtService;
 import io.jsonwebtoken.Jwt;
@@ -60,6 +61,11 @@ public class PostController {
         }
     }
 
+
+    /**
+     * [GET] POST의 모든 정보 불러오기
+     * @return BaseResponse<List<GetPostRes>>
+     */
     @ResponseBody
     @GetMapping("")
     public BaseResponse<List<GetPostRes>> getPostAll(){
@@ -69,4 +75,41 @@ public class PostController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
+    /**
+     * [POST] POSTIDX로 작성된 글 글 불러오기
+     * @param postIdx
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/{postIdx}")
+    public BaseResponse<List<GetPostidxRes>> getPostByPostIdx(@PathVariable("postIdx") int postIdx){
+        try {
+            return new BaseResponse<>(this.postProvider.getPostByPostIdx(postIdx));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    // user가 작성한 post 불러오기
+
+    /**
+     * [POST] USER가 작성한 글 불러오기
+     * @param userIdx
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/user/{userIdx}")
+    public BaseResponse<List<GetPostidxRes>> getPostByUserIdx(@PathVariable("userIdx") int userIdx){
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            return new BaseResponse<>(this.postProvider.getPostByUserIdx(userIdx));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
 }
