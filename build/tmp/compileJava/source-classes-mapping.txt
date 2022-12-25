@@ -44,8 +44,8 @@ com/example/demo/config/secret/Secret.java
  com.example.demo.config.secret.Secret
 com/example/demo/src/user/model/PostUserRes.java
  com.example.demo.src.user.model.PostUserRes
-com/example/demo/src/user/UserController.java
- com.example.demo.src.user.UserController
+com/example/demo/DemoApplication.java
+ com.example.demo.DemoApplication
 com/example/demo/config/BaseResponse.java
  com.example.demo.config.BaseResponse
 com/example/demo/src/Location/LocationController.java
@@ -66,14 +66,16 @@ com/example/demo/src/Location/LocationDao.java
  com.example.demo.src.Location.LocationDao
 com/example/demo/config/BaseException.java
  com.example.demo.config.BaseException
-com/example/demo/DemoApplication.java
- com.example.demo.DemoApplication
-com/example/demo/src/Post/PostService.java
- com.example.demo.src.Post.PostService
-com/example/demo/src/Post/PostProvider.java
- com.example.demo.src.Post.PostProvider
+com/example/demo/src/user/UserController.java
+ com.example.demo.src.user.UserController
+com/example/demo/src/Post/model/PostCommentReq.java
+ com.example.demo.src.Post.model.PostCommentReq
 com/example/demo/src/Post/PostDao.java
  com.example.demo.src.Post.PostDao
  com.example.demo.src.Post.PostDao$1
+com/example/demo/src/Post/PostProvider.java
+ com.example.demo.src.Post.PostProvider
+com/example/demo/src/Post/PostService.java
+ com.example.demo.src.Post.PostService
 com/example/demo/src/Post/PostController.java
  com.example.demo.src.Post.PostController

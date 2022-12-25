@@ -5,6 +5,7 @@ import com.example.demo.config.BaseResponse;
 import com.example.demo.config.BaseResponseStatus;
 import com.example.demo.src.Post.model.GetPostRes;
 import com.example.demo.src.Post.model.GetPostidxRes;
+import com.example.demo.src.Post.model.PostCommentReq;
 import com.example.demo.src.Post.model.PostPostReq;
 import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +112,12 @@ public class PostController {
         }
     }
 
+    /**
+     * [POST] 사용자의 POST LIKE
+     * @param userIdx
+     * @param postIdx
+     * @return String
+     */
     @ResponseBody
     @PostMapping("/like")
     public BaseResponse<String> postUserLikePost(@RequestParam("userIdx") int userIdx, @RequestParam("postIdx") int postIdx){
@@ -121,6 +128,27 @@ public class PostController {
             }
             boolean answer = this.postService.postUserLikePost(userIdx, postIdx);
             return new BaseResponse<>("좋아요 " + answer);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    /**
+     * [POST] 댓글 쓰기
+     * @param userIdx
+     * @param postIdx
+     * @param postCommentReq
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/comment")
+    public BaseResponse<String> postComment(@RequestParam("userIdx") int userIdx, @RequestParam("postIdx") int postIdx, @RequestBody PostCommentReq postCommentReq){
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            return new BaseResponse<>("CommentIdx: " + this.postService.postCommentFirst(userIdx, postIdx, postCommentReq));
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }

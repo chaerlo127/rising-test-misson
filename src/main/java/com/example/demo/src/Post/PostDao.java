@@ -209,4 +209,14 @@ public class PostDao {
         this.jdbcTemplate.update(deletePostUseLikeQuery, deletePostUseLikeParams);
         return false;
     }
+
+    public int postCommentFirst(int userIdx, int postIdx, PostCommentReq postCommentReq) {
+        String createPostCommentQuery = "insert into PostComment (comment, anoComment, postIdx, userIdx, CommentNum) VALUES (?,?, ?, ?, ?)";
+        Object[] createPostCommentParams = new Object[]{postCommentReq.getComment(), postCommentReq.isAnoComment(),
+                postIdx, userIdx, postCommentReq.getCommentNum()};
+        this.jdbcTemplate.update(createPostCommentQuery, createPostCommentParams);
+
+        String lastInserIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInserIdQuery,int.class);
+    }
 }

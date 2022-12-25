@@ -2,6 +2,7 @@ package com.example.demo.src.Post;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponseStatus;
+import com.example.demo.src.Post.model.PostCommentReq;
 import com.example.demo.src.Post.model.PostPostReq;
 import com.example.demo.src.user.UserDao;
 import com.example.demo.utils.JwtService;
@@ -56,7 +57,14 @@ public class PostService {
             }
 
         } catch(Exception e){
-            e.printStackTrace();
+            throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public int postCommentFirst(int userIdx, int postIdx, PostCommentReq postCommentReq) throws BaseException{
+        try{
+            return this.postDao.postCommentFirst(userIdx, postIdx, postCommentReq);
+        }catch (Exception e){
             throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
         }
     }
