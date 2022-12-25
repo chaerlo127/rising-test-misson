@@ -3,11 +3,14 @@ package com.example.demo.src.Post;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.config.BaseResponseStatus;
+import com.example.demo.src.Post.model.GetPostRes;
 import com.example.demo.src.Post.model.PostPostReq;
 import com.example.demo.utils.JwtService;
 import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.INVALID_USER_JWT;
 
@@ -26,8 +29,14 @@ public class PostController {
         this.postService = postService;
         this.jwtService = jwtService;
     }
-    // post 전체 불러오기
-    // post 생성하기 -> jwt 필요함
+
+    /**
+     * [POST] 글 작성
+     * BaseResponse<String>
+     * @param postPostReq
+     * @param userIdx
+     * @return
+     */
     @ResponseBody
     @PostMapping("/{userIdx}")
     public BaseResponse<String> postnewPost (@RequestBody PostPostReq postPostReq, @PathVariable("userIdx") int userIdx){
@@ -50,6 +59,14 @@ public class PostController {
             return new BaseResponse<>(e.getStatus());
         }
     }
-    
 
+    @ResponseBody
+    @GetMapping("")
+    public BaseResponse<List<GetPostRes>> getPostAll(){
+        try {
+            return new BaseResponse<>(this.postProvider.getPostAll());
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 }
