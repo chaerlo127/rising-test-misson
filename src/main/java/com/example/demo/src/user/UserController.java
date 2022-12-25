@@ -68,7 +68,6 @@ public class UserController {
     @GetMapping("/{userIdx}") // (GET) 127.0.0.1:9000/users/:userIdx
     public BaseResponse<GetUserRes> getUserByIdx(@PathVariable("userIdx")int userIdx) {
         try{
-
             GetUserRes getUsersRes = userProvider.getUsersByIdx(userIdx);
             return new BaseResponse<>(getUsersRes);
         } catch(BaseException exception){

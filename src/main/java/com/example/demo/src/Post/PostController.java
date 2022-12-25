@@ -7,7 +7,6 @@ import com.example.demo.src.Post.model.GetPostRes;
 import com.example.demo.src.Post.model.GetPostidxRes;
 import com.example.demo.src.Post.model.PostPostReq;
 import com.example.demo.utils.JwtService;
-import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -107,6 +106,21 @@ public class PostController {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
             return new BaseResponse<>(this.postProvider.getPostByUserIdx(userIdx));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("/like")
+    public BaseResponse<String> postUserLikePost(@RequestParam("userIdx") int userIdx, @RequestParam("postIdx") int postIdx){
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            boolean answer = this.postService.postUserLikePost(userIdx, postIdx);
+            return new BaseResponse<>("좋아요 " + answer);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }

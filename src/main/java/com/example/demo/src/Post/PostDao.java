@@ -1,8 +1,8 @@
 package com.example.demo.src.Post;
 
 import com.example.demo.src.Post.model.*;
-import com.example.demo.src.user.model.GetUserRes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -174,5 +174,39 @@ public class PostDao {
                                 ), rs.getString("postIdx"))
                 ),
                 getPostsByIdxParams);
+    }
+
+
+
+    public GetPostLikeRes getPostUserLikeByPostIdxAndUserIdx(int userIdx, int postIdx) {
+        try{
+            String getUsersByIdxQuery = "select postLikeIdx,postIdx,userIdx from PostLike where userIdx=? and postIdx = ?";
+            Object[] createLikeParams = new Object[]{userIdx, postIdx};
+            return this.jdbcTemplate.queryForObject(getUsersByIdxQuery,
+                    (rs, rowNum) -> new GetPostLikeRes(
+                            rs.getInt("postLikeIdx"),
+                            rs.getInt("postIdx"),
+                            rs.getInt("userIdx")),
+                    createLikeParams);
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
+
+    }
+
+    public boolean createPostList(int userIdx, int postIdx) {
+        String createUserQuery = "insert into PostLike (postIdx, userIdx) VALUES (?,?)";
+        Object[] createUserParams = new Object[]{postIdx, userIdx};
+        this.jdbcTemplate.update(createUserQuery, createUserParams);
+        String lastInserIdQuery = "select last_insert_id()";
+        this.jdbcTemplate.queryForObject(lastInserIdQuery,int.class);
+        return true;
+    }
+    public boolean deletePostLikeByPostIdxAndUserIdx(int userIdx, int postIdx) {
+        String deletePostUseLikeQuery = "delete from PostLike where postIdx = ? and userIdx = ?"; // 해당 userIdx를 만족하는 User를 해당 nickname으로 변경한다.
+        Object[] deletePostUseLikeParams = new Object[]{postIdx, userIdx}; // 주입될 값들(nickname, userIdx) 순
+
+        this.jdbcTemplate.update(deletePostUseLikeQuery, deletePostUseLikeParams);
+        return false;
     }
 }
